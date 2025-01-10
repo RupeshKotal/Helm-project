@@ -1,0 +1,26 @@
+replicaCount: 3
+
+image:
+  repo: rux123/bankapp
+  tag: latest
+  pullPolicy: always
+
+service:
+  type: LoadBalancer
+  port: 80
+  
+
+resource:
+  limit:
+    cpu: "2000m"
+    memory: "512Mi"
+  request:
+    cpu: "1000m"
+    memory: "200Mi"
+
+
+sql:
+  configMapName: mysql-confgMap
+  SecretName: mysql-secret
+  rootPassword: "Test@123"
+  dbName: bankappdb

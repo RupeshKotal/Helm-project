@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels: 
+    app: my-sql-pod
+spec:
+  replicas: 3
+  selector:
+    matchLabels: 
+      app: my-sql-pod
+  template:
+    metadata:
+      name: mysql-app
+      labels:
+        app: my-sql-pod
+    spec:
+      containers:
+        - name: my-sql-pod
+          image: mysql:8.1
+          ports:
+            - containerPort: 3306
+          imagePullPolicy: IfNotPresent
+          env:
+           - name: MYSQL_ROOT_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: {{ .Values.sql.SecretName }}
+                 key: MY_SQL_ROOT_PASSWORD
+
+           - name: MYSQL_DATABASE
+             valueFrom:
+               configMapKeyRef:
+                 name: {{ .Values.sql.configMapName }}
+                 key: MYSQL_DATABASE
+
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: my-sql-data
+      volumes:
+        - name: my-sql-data
+          persistentVolumeClaim: 
+            claimName: mysql-pvc
+
+
+    

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+ name: mysql-svc
+ labels:
+   app: my-sql-svc
+spec:
+  selector:
+    app: my-sql-pod
+  ports:
+   - targetPort: 3306
+     port: 3306
